@@ -6,22 +6,22 @@ def store(key, secret, password):
     porridge = Porridge(f"{key}:{secret}")
     boiled_password = porridge.boil(password)
     file_obj = open('secret.txt', 'a')
-    file_obj.write(boiled_password)
+    password = boiled_password
+    file_obj.write(password)
     file_obj.close()
     print('Success')
 
 
-def verify(key, secret, password):
-    porridge = Porridge(f'{key}:{secret}')
-    boiled_password = porridge.boil(password)
-    if porridge.verify(password, boiled_password) == True:
-        print('Verified')
+def verify(key, secret, password, boiled_password):
+    porridge = Porridge(f"{key}:{secret}")
+    old_boiled_password = boiled_password
+    if porridge.verify(password, old_boiled_password):
+        print('Success!')
     else:
-         print('Not found')
+        print('Fail!')
 
 
 def main():
-
     if len(sys.argv) < 5 or len(sys.argv) > 5:
         print('Invalid number of arguments')
 
@@ -30,17 +30,17 @@ def main():
 
     else:
         if sys.argv[1] == 'store':
-            
             key = sys.argv[2]
             secret = sys.argv[3]
             password = sys.argv[4]
-            store(key,secret,password)
+            store(key, secret, password)
+
         elif sys.argv[1] == 'verify':
-        
             key = sys.argv[2]
             secret = sys.argv[3]
             password = sys.argv[4]
-            verify(key,secret,password)
+            file_obj = open("secret.txt", "r")
+            verify(key, secret, password, boiled_password=file_obj.read())
 
 
 main()
